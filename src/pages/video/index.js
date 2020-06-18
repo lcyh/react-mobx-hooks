@@ -38,9 +38,9 @@ export default class PlayerExample extends Component {
       this.player.load();
     }
   }
-  //   handleStateChange(state, prevState) {
-  //     // console.log(state)
-  //   }
+  handleStateChange(state, prevState) {
+    // console.log(state)
+  }
   //   合成事件
   handleClick = () => {
     console.log("script start");
