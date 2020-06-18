@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { RouteComponentProps } from "react-router-dom";
-import styles from "./index";
+import styles from "./index.less";
 
 interface IDemoProps extends RouteComponentProps {
 }

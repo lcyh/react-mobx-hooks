@@ -78,7 +78,7 @@ module.exports = {
       },
       // 解析样式
       {
-        test: /\.module\.(css|less)$/,
+        test: /\.(css|less)$/,
         exclude: /node_modules/,
         include: [appSrc],
         use: [
@@ -163,7 +163,15 @@ module.exports = {
       pages: appPages,
       components: appComponents,
     },
-    extensions: ["*", ".js", ".jsx", ".tsx", ".ts", ".less", ".css"], //扩展名
+    extensions: [
+      ".js",
+      ".jsx",
+      ".tsx",
+      ".ts",
+      ".less",
+      ".module.less",
+      ".module.css",
+    ], //扩展名
     // 设置模块查找范围
     modules: ["node_modules", appNodeModules],
   },

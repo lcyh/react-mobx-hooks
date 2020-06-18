@@ -1,6 +1,6 @@
 # react-mobx-starter
 
-进行 React + Mobx + React Route 开发的脚手架
+进行 React + Mobx + +T YPESCRIPT + React Route 开发的脚手架
 
 ## 下载项目
 
@@ -20,7 +20,7 @@ npm install
 npm run start
 ```
 
-打开浏览器，输入：`localhost:8000` 查看项目运行效果
+打开浏览器，输入：`localhost:8888` 查看项目运行效果
 
 ## 项目打包
 
