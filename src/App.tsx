@@ -3,9 +3,6 @@ import { Router, Switch, Route } from "react-router-dom";
 import { ErrorBoundary, Loading } from "@/components";
 // 使用 CSS Module 的方式引入 App.less
 import styles from "./App.less";
-
-// Loading 提示
-const loadingComponent = () => <span>Loading</span>;
 // Home 组件
 const Home = lazy(() => import("@/pages/home/index"));
 // Settings 组件

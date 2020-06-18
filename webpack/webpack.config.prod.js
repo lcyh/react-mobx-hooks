@@ -1,9 +1,11 @@
+const path = require("path");
 const webpack = require("webpack");
 const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
 const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 const FriendlyErrorsWebpackPlugin = require("friendly-errors-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
+const AddAssetHtmlWebpackPlugin = require("add-asset-html-webpack-plugin");
 const merge = require("webpack-merge");
 const common = require("./webpack.common");
 
@@ -11,6 +13,8 @@ const config = merge(common, {
   mode: "production",
   devtool: "hidden-source-map",
   plugins: [
+    // 清理 dist 文件，2.0。0 版本之后不需要设置参数就可以自动清除打包生成的目录
+    new CleanWebpackPlugin(),
     // 提取 css 文件
     new MiniCssExtractPlugin({
       filename: "public/styles/[name].[contenthash:8].css",
@@ -25,8 +29,14 @@ const config = merge(common, {
     }),
     // 在命令行展示更清晰地提示信息
     new FriendlyErrorsWebpackPlugin(),
-    // 清理 dist 文件，2.0。0 版本之后不需要设置参数就可以自动清除打包生成的目录
-    new CleanWebpackPlugin(),
+    // 引用dll
+    new webpack.DllReferencePlugin({
+      manifest: path.resolve(__dirname, "../public/dll/vendors_manifest.json"),
+    }),
+    // 将某个文件打包输出去，并在html中自动引入该资源
+    new AddAssetHtmlWebpackPlugin({
+      filepath: path.resolve(__dirname, "../public/dll/vendors.dll.js"),
+    }),
   ],
   optimization: {
     // 打包压缩js/css文件
