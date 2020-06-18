@@ -13,8 +13,7 @@ const Home: FC = ({ history }: any) => {
      * 跳转到 Settings 界面
      */
     const toSettingPage = () => {
-        // history.push("/settings");
-        history.push("/video");
+        history.push("/settings");
     };
 
     /**
