@@ -5,11 +5,8 @@ import { LocaleProvider } from "antd";
 import { HashRouter } from "react-router-dom";
 import zh_CN from "antd/lib/locale-provider/zh_CN";
 import "moment/locale/zh-cn";
-
-import GlobalModel from "./GlobalModel";
+import globalModel from "./GlobalModel";
 import App from "./App";
-
-const globalModel = new GlobalModel();
 
 ReactDom.render(
     // 使用 Provider 将 globalModel 传递给包裹住的所有组件及子组件
