@@ -22,7 +22,7 @@ const Settings = Loadable({
 
 // Display 组件
 const Display = Loadable({
-    loader: () => import("@/pages/display"),
+    loader: () => import("@/pages/display/index"),
     loading: loadingComponent,
 });
 // Display 组件

@@ -171,7 +171,7 @@ module.exports = {
       ".less",
       ".module.less",
       ".module.css",
-    ], //扩展名
+    ],
     // 设置模块查找范围
     modules: ["node_modules", appNodeModules],
   },

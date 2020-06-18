@@ -66,6 +66,7 @@
     "@babel/runtime": "^7.10.2",
     "@babel/runtime-corejs2": "^7.10.2",
     "@types/react": "^16.9.37",
+    "@types/react-color": "^3.0.2",
     "@types/react-dom": "^16.9.8",
     "@types/react-loadable": "^5.5.3",
     "@types/react-router-config": "^5.0.1",
