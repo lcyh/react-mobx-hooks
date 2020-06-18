@@ -4,9 +4,14 @@
     "node": true,
     "es6": true
   },
-  "parser": "babel-eslint",
-  "extends": ["eslint:recommended", "plugin:react/recommended"],
-  "plugins": ["react"],
+  "parser": "@typescript-eslint/parser",
+  "extends": [
+    "airbnb",
+    "plugin:@typescript-eslint/recommended",
+    "eslint:recommended",
+    "plugin:react/recommended"
+  ],
+  "plugins": ["react", "@typescript-eslint"],
   "parserOptions": {
     "ecmaVersion": 7,
     "sourceType": "module",
@@ -19,35 +24,144 @@
     "codeFrame": true
   },
   "rules": {
+    "@typescript-eslint/explicit-function-return-type": "off",
+    "no-console": "off",
     "semi": "warn",
     "strict": 0,
     "react/jsx-uses-react": "error",
     "react/jsx-uses-vars": "error",
     "no-unused-vars": "warn",
     "react/display-name": "off",
-    "react/jsx-key": "warn"
+    "react/jsx-key": "warn",
+
+    // "@typescript-eslint/camelcase": [
+    //   "error",
+    //   {
+    //     "allow": [
+    //       "^UNSAFE_",
+    //       "child_process",
+    //       "drop_debugger",
+    //       "drop_console",
+    //       "keep_classnames",
+    //       "keep_fnames"
+    //     ]
+    //   }
+    // ],
+    "@typescript-eslint/no-non-null-assertion": "off",
+    "class-methods-use-this": "warn",
+    "consistent-return": "warn",
+    "eqeqeq": "warn",
+    "guard-for-in": "warn",
+    "import/no-extraneous-dependencies": "warn",
+    "import/no-named-as-default": "warn",
+    "import/no-named-as-default-member": "warn",
+    "import/no-cycle": "warn",
+    "import/order": [
+      "error",
+      {
+        "groups": [
+          "builtin", // 1. node "builtin" modules
+          "external", // 2. "external" modules(node_modules)
+          "internal", // 3. "internal" modules(webpack alias)
+          "parent", // 4. modules from a "parent" directory
+          "sibling", // 5. "sibling" modules from the same or a sibling's directory
+          "index" // 6. "index" of the current directory
+        ],
+        "newlines-between": "always-and-inside-groups"
+      }
+    ],
+    "import/prefer-default-export": "off",
+    "jsx-a11y/anchor-is-valid": "off",
+    "jsx-a11y/click-events-have-key-events": "off",
+    "jsx-a11y/media-has-caption": "warn",
+    "jsx-a11y/no-noninteractive-element-interactions": "off",
+    "jsx-a11y/no-static-element-interactions": "off",
+    "no-bitwise": "warn",
+    "no-cond-assign": "warn",
+    "no-loop-func": "warn",
+    "no-nested-ternary": "warn",
+    "no-param-reassign": "warn",
+    "no-plusplus": "warn",
+    "no-prototype-builtins": "warn",
+    "no-restricted-globals": "warn",
+    "no-restricted-syntax": "warn",
+    "no-return-assign": "warn",
+    "no-script-url": "warn",
+    "no-shadow": "warn",
+    "no-unused-expressions": "warn",
+    "no-use-before-define": "warn",
+    "no-useless-constructor": "warn",
+    "one-var": "warn",
+    "prefer-const": "warn",
+    "prefer-destructuring": [
+      "warn",
+      {
+        "AssignmentExpression": {
+          "array": false,
+          "object": false
+        },
+        "VariableDeclarator": {
+          "array": false,
+          "object": true
+        }
+      },
+      {
+        "enforceForRenamedProperties": false
+      }
+    ],
+    "prefer-promise-reject-errors": "warn",
+    "radix": "warn",
+    "react/button-has-type": "warn",
+    "react/destructuring-assignment": "warn",
+    "react/jsx-filename-extension": [
+      "error",
+      {
+        "extensions": [".js", ".jsx", ".ts", ".tsx"]
+      }
+    ],
+    "react/jsx-no-bind": "warn",
+    "react/no-access-state-in-setstate": "warn",
+    "react/no-array-index-key": "warn",
+    "react/no-did-mount-set-state": "warn",
+    "react/prefer-stateless-function": "off",
+    // 使用 TS 无需使用 prop-types
+    "react/prop-types": "off",
+    "react/sort-comp": "warn",
+    "sort-imports": [
+      "error",
+      {
+        "ignoreCase": true,
+        "ignoreDeclarationSort": true,
+        "ignoreMemberSort": false,
+        "memberSyntaxSortOrder": ["none", "all", "multiple", "single"]
+      }
+    ],
+    // "prettier/prettier": "error",
+    "import/extensions": [
+      "error",
+      "ignorePackages",
+      {
+        "js": "never",
+        "jsx": "never",
+        "ts": "never",
+        "tsx": "never"
+      }
+    ],
+    "no-lone-blocks": "off"
   },
   "settings": {
-    "react": {
-      "createClass": "createReactClass", // Regex for Component Factory to use,
-      // default to "createReactClass"
-      "pragma": "React", // Pragma to use, default to "React"
-      "version": "detect", // React version. "detect" automatically picks the version you have installed.
-      // You can also use `16.0`, `16.3`, etc, if you want to override the detected value.
-      // default to latest and warns if missing
-      // It will default to "detect" in the future
-      "flowVersion": "0.53" // Flow version
-    },
-    "propWrapperFunctions": [
-      // The names of any function used to wrap propTypes, e.g. `forbidExtraProps`. If this isn't set, any propTypes wrapped in a function will be skipped.
-      "forbidExtraProps",
-      { "property": "freeze", "object": "Object" },
-      { "property": "myFavoriteWrapper" }
-    ],
-    "linkComponents": [
-      // Components used as alternatives to <a> for linking, eg. <Link to={ url } />
-      "Hyperlink",
-      { "name": "Link", "linkAttribute": "to" }
-    ]
+    "import/resolver": {
+      "alias": {
+        "extensions": [".ts", ".tsx", ".js", ".jsx", ".json"],
+        "map": [
+          ["@", "./src"],
+          ["src", "./src"],
+          ["assets", "./src/assets"],
+          ["utils", "./src/utils"],
+          ["pages", "./src/pages"],
+          ["components", "./src/components"]
+        ]
+      }
+    }
   }
 }

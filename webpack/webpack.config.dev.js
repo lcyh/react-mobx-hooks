@@ -49,6 +49,12 @@ const config = merge(common, {
     proxy,
   },
   plugins: [
+    // 定义 NODE_ENV 环境变量为 development
+    new webpack.DefinePlugin({
+      "process.env": {
+        NODE_ENV: JSON.stringify(process.env.NODE_ENV),
+      },
+    }),
     // 热加载插件
     new webpack.HotModuleReplacementPlugin(),
     // 提取 css 文件

@@ -12,7 +12,7 @@ import {
   VolumeMenuButton,
 } from "video-react";
 import "video-react/dist/video-react.css";
-import styles from "./index.less";
+import styles from "./index.module.less";
 
 export default class PlayerExample extends Component {
   constructor(props) {

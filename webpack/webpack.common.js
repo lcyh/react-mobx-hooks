@@ -1,8 +1,10 @@
 const HTMLWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const ProgressBarPlugin = require("progress-bar-webpack-plugin");
-const autoprefixer = require("autoprefixer");
 const chalk = require("chalk");
+const friendlyFormatter = require("eslint-formatter-friendly");
+const themeVars = require("../src/theme.less");
+const isProd = process.env.NODE_ENV === "production";
 const {
   appSrc,
   appDist,
@@ -29,6 +31,7 @@ module.exports = {
     new HTMLWebpackPlugin({
       template: appHtml,
       filename: "index.html",
+      inject: true,
     }),
     // 打包进度
     new ProgressBarPlugin({
@@ -45,30 +48,48 @@ module.exports = {
   ],
   module: {
     rules: [
-      // 解析 js
       {
-        test: /\.(js|jsx)$/,
-        // loader: 'babel-loader?cacheDirectory',
+        enforce: "pre",
+        test: /\.(ts|tsx|js|jsx)?$/,
         include: [appSrc],
         exclude: /node_modules/,
-        use: ["babel-loader?cacheDirectory", "eslint-loader"],
+        use: {
+          loader: "eslint-loader",
+          options: {
+            eslintPath: require.resolve("eslint"),
+            emitWarning: false,
+            cache: true, // 缓存lint结果，可以减少lint时间
+            formatter: friendlyFormatter,
+            quiet: true,
+          },
+        },
+      },
+      // 解析 js
+      {
+        test: /\.(js|jsx|ts|tsx)$/,
+        include: [appSrc],
+        exclude: /node_modules/,
+        use: {
+          loader: "babel-loader",
+          options: {
+            cacheDirectory: !isProd, // 缓存
+          },
+        },
       },
       // 解析样式
       {
-        test: /\.(css|less)$/,
+        test: /\.module\.(css|less)$/,
         exclude: /node_modules/,
+        include: [appSrc],
         use: [
-          {
-            // 使用 MiniCssExtractPlugin.loader 代替 style-loader
-            loader: MiniCssExtractPlugin.loader,
-          },
+          isProd ? MiniCssExtractPlugin.loader : "style-loader",
           {
             loader: "css-loader",
             options: {
               importLoaders: 2,
               sourceMap: true,
               modules: {
-                localIdentName: "[local].[hash:8]",
+                localIdentName: "[local].[hash:base64:5]",
               },
               // 使用时 class 名会原样导出
               localsConvention: "asIs",
@@ -76,14 +97,12 @@ module.exports = {
           },
           {
             loader: "postcss-loader",
-            options: {
-              plugins: () => [autoprefixer()],
-            },
           },
           {
             loader: "less-loader",
             options: {
               javascriptEnabled: true,
+              modifyVars: themeVars,
             },
           },
         ],
@@ -91,19 +110,13 @@ module.exports = {
       {
         test: /\.(css|less)$/,
         include: /node_modules/,
+        exclude: [appSrc],
         use: [
           {
-            loader: MiniCssExtractPlugin.loader,
+            loader: "style-loader",
           },
           {
             loader: "css-loader",
-            options: {},
-          },
-          {
-            loader: "postcss-loader",
-            options: {
-              plugins: () => [autoprefixer()],
-            },
           },
           {
             loader: "less-loader",
@@ -117,6 +130,7 @@ module.exports = {
       {
         test: /\.(png|svg|jpg|gif)$/,
         use: ["file-loader"],
+        include: [appSrc],
       },
       // 解析 字体
       {
@@ -143,11 +157,13 @@ module.exports = {
   resolve: {
     // 设置别名
     alias: {
+      "@": appSrc,
       src: appSrc,
       utils: appUtils,
       pages: appPages,
       components: appComponents,
     },
+    extensions: ["*", ".js", ".jsx", ".tsx", ".ts", ".less", ".css"], //扩展名
     // 设置模块查找范围
     modules: ["node_modules", appNodeModules],
   },
