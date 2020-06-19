@@ -6,7 +6,6 @@ const FriendlyErrorsWebpackPlugin = require("friendly-errors-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const AddAssetHtmlWebpackPlugin = require("add-asset-html-webpack-plugin");
-const createHappyPlugin = require("./webpack.happypack.plugin");
 const merge = require("webpack-merge");
 const common = require("./webpack.common");
 
@@ -38,17 +37,6 @@ const config = merge(common, {
     new AddAssetHtmlWebpackPlugin({
       filepath: path.resolve(__dirname, "../public/dll/vendors.dll.js"),
     }),
-    createHappyPlugin("happy-babel", [
-      {
-        loader: "babel-loader",
-        options: {
-          cacheDirectory: true,
-          // Save disk space when time isn't as important
-          cacheCompression: true,
-          compact: true,
-        },
-      },
-    ]),
   ],
   optimization: {
     minimize: true,

@@ -3,6 +3,7 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const ProgressBarPlugin = require("progress-bar-webpack-plugin");
 const chalk = require("chalk");
 const friendlyFormatter = require("eslint-formatter-friendly");
+const createHappyPlugin = require("./webpack.happypack.plugin");
 const themeVars = require("../src/theme.less");
 const isProd = process.env.NODE_ENV === "production";
 const {
@@ -33,6 +34,17 @@ module.exports = {
       filename: "index.html",
       inject: true,
     }),
+    createHappyPlugin("happy-babel", [
+      {
+        loader: "babel-loader",
+        options: {
+          cacheDirectory: true,
+          // Save disk space when time isn't as important
+          cacheCompression: true,
+          compact: true,
+        },
+      },
+    ]),
     // 打包进度
     new ProgressBarPlugin({
       complete: "█",

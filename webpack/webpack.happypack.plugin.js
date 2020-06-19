@@ -1,6 +1,6 @@
 /*
  * @Author: changluo
- * @Description:happypack
+ * @Description:happypack开启多进程Loader转换
  * 原理：在webpack构建过程中，实际上耗费时间大多数用在loader解析转换以及代码的压缩中。
  * 日常开发中我们需要使用Loader对js，css，图片，字体等文件做转换操作，并且转换的文件数据量也是非常大。
  * 由于js单线程的特性使得这些转换操作不能并发处理文件，而是需要一个个文件进行处理。
