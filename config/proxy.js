@@ -23,7 +23,7 @@ const proxys = {
       target: "http://123.234.123.234",
       //请求头headers 可能用于后端重定向
       headers: {
-        Host: "fx-manager.qa.hthsmob.com",
+        Host: "fx-manager.qa.hths.com",
       },
       pathRewrite: {
         "^/api/": "",
@@ -35,12 +35,12 @@ const proxys = {
       changeOrigin: true,
       target: "http://123.234.123.234:80",
       headers: {
-        Host: "fx-manager.hthsmob.com",
+        Host: "fx-manager.hths.com",
       },
     },
     "/financeApi": {
       changeOrigin: true,
-      target: "http://saas.fin-purchase.com/ ",
+      target: "http://saas.fin-purzz.com/ ",
       pathRewrite: {
         "^/financeApi/": "/finance/",
       },
