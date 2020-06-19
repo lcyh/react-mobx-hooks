@@ -1,6 +1,8 @@
 /*
  * @Author: changluo
- * @Description:dll
+ * @Description:抽离第三方模块,打包一次后,第三方依赖不用打包,提高构建打包速度;每次更改本地代码的文件的时候,只需要打包编译项目本身的文件代码，而不会再去编译第三方库，提高编译速度
+ * 对于开发项目中不经常会变更的静态依赖文件。类似于我们的react全家桶等等。因为很少会变更，所以我们不希望这些依赖要被集成到每一次的构建逻辑中去。
+ *
  */
 const path = require("path");
 const webpack = require("webpack");

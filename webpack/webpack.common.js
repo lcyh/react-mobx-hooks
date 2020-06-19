@@ -19,7 +19,7 @@ const {
 module.exports = {
   entry: {
     main: ["@babel/polyfill", appIndex],
-    common: ["react", "react-dom", "react-router-dom", "mobx"],
+    common: ["react", "react-dom", "react-router-dom", "mobx", "mobx-react"],
   },
   output: {
     filename: "public/js/[name].[hash:8].js",
@@ -69,12 +69,9 @@ module.exports = {
         test: /\.(js|jsx|ts|tsx)$/,
         include: [appSrc],
         exclude: /node_modules/,
-        use: {
-          loader: "babel-loader",
-          options: {
-            cacheDirectory: !isProd, // 缓存
-          },
-        },
+        //   loader: "babel-loader",
+        // 把对 .js .jsx 文件的处理转交给 id 为 happy-babel 的 HappyPack 实例
+        use: ["happypack/loader?id=happy-babel"],
       },
       // 解析样式
       {

@@ -1,11 +1,12 @@
 const path = require("path");
 const webpack = require("webpack");
-const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
+const TerserPlugin = require("terser-webpack-plugin");
 const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 const FriendlyErrorsWebpackPlugin = require("friendly-errors-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const AddAssetHtmlWebpackPlugin = require("add-asset-html-webpack-plugin");
+const createHappyPlugin = require("./webpack.happypack.plugin");
 const merge = require("webpack-merge");
 const common = require("./webpack.common");
 
@@ -37,57 +38,100 @@ const config = merge(common, {
     new AddAssetHtmlWebpackPlugin({
       filepath: path.resolve(__dirname, "../public/dll/vendors.dll.js"),
     }),
+    createHappyPlugin("happy-babel", [
+      {
+        loader: "babel-loader",
+        options: {
+          cacheDirectory: true,
+          // Save disk space when time isn't as important
+          cacheCompression: true,
+          compact: true,
+        },
+      },
+    ]),
   ],
   optimization: {
+    minimize: true,
     // 打包压缩js/css文件
     minimizer: [
-      new UglifyJsPlugin({
-        uglifyOptions: {
+      // This is only used in production mode
+      new TerserPlugin({
+        // 使用多进程并行运行来提高构建速度。并发运行的默认数量为 os.cpus().length - 1
+        parallel: true,
+        terserOptions: {
+          parse: {
+            // We want terser to parse ecma 8 code. However, we don't want it
+            // to apply any minification steps that turns valid ecma 5 code
+            // into invalid ecma 5 code. This is why the 'compress' and 'output'
+            // sections only apply transformations that are ecma 5 safe
+            // https://github.com/facebook/create-react-app/pull/4234
+            ecma: 8,
+          },
           compress: {
-            // 在UglifyJs删除没有用到的代码时不输出警告
-            // warnings: false,
             // 删除所有的 `console` 语句，可以兼容ie浏览器
             drop_console: true,
             // 内嵌定义了但是只用到一次的变量
             collapse_vars: true,
             // 提取出出现多次但是没有定义成变量去引用的静态值
             reduce_vars: true,
+            ecma: 5,
+            warnings: false,
+            // Disabled because of an issue with Uglify breaking seemingly valid code:
+            // https://github.com/facebook/create-react-app/issues/2376
+            // Pending further investigation:
+            // https://github.com/mishoo/UglifyJS2/issues/2011
+            comparisons: false,
+            // Disabled because of an issue with Terser breaking valid code:
+            // https://github.com/facebook/create-react-app/issues/5250
+            // Pending further investigation:
+            // https://github.com/terser-js/terser/issues/120
+            inline: 2,
+          },
+          mangle: {
+            safari10: true,
           },
           output: {
             // 最紧凑的输出
             beautify: false,
             // 删除所有的注释
             comments: false,
+            ecma: 5,
+            // Turned on because emoji and regex is not minified properly using default
+            // https://github.com/facebook/create-react-app/issues/2488
+            ascii_only: true,
           },
         },
+        sourceMap: false,
       }),
       // 压缩 CSS 代码
       new OptimizeCSSAssetsPlugin({}),
     ],
     // 拆分公共模块
     splitChunks: {
-      cacheGroups: {
-        styles: {
-          name: "styles",
-          test: /\.(css|less)/,
-          chunks: "all",
-          enforce: true,
-          // 表示是否使用已有的 chunk
-          reuseExistingChunk: true,
-        },
-        commons: {
-          name: "commons",
-          chunks: "initial",
-          minChunks: 2,
-          reuseExistingChunk: true,
-        },
-        vendors: {
-          name: "vendors",
-          test: /[\\/]node_modules[\\/]/,
-          priority: -10,
-          reuseExistingChunk: true,
-        },
-      },
+      chunks: "all",
+      name: false,
+      //   cacheGroups: {
+      //     styles: {
+      //       name: "styles",
+      //       test: /\.(css|less)/,
+      //       chunks: "all",
+      //       enforce: true,
+      //       // 表示是否使用已有的 chunk
+      //       reuseExistingChunk: true,
+      //     },
+      //     commons: {
+      //       name: "commons",
+      //       chunks: "initial",
+      //       minChunks: 2,
+      //       reuseExistingChunk: true,
+      //     },
+      //     vendors: {
+      //       name: "vendors",
+      //       test: /[\\/]node_modules[\\/]/,
+      //       priority: -10,
+      //       reuseExistingChunk: true,
+      //     },
+      //   },
     },
     // 为每个仅含有 runtime 的入口起点添加一个额外 chunk
     runtimeChunk: true,
