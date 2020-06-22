@@ -6,8 +6,11 @@ const FriendlyErrorsWebpackPlugin = require("friendly-errors-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const AddAssetHtmlWebpackPlugin = require("add-asset-html-webpack-plugin");
+const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
 const merge = require("webpack-merge");
 const common = require("./webpack.common");
+const isAnalyze = process.env.ANALYZE_ENV;
+console.log("isAnalyze", isAnalyze);
 
 const config = merge(common, {
   mode: "production",
@@ -37,6 +40,14 @@ const config = merge(common, {
     new AddAssetHtmlWebpackPlugin({
       filepath: path.resolve(__dirname, "../public/dll/vendors.dll.js"),
     }),
+    //打包可视化插件
+    isAnalyze &&
+      new BundleAnalyzerPlugin({
+        //  将在“服务器”模式下使用的端口启动HTTP服务器。
+        analyzerPort: 5000,
+        //  在默认浏览器中自动打开报告
+        openAnalyzer: true,
+      }),
   ],
   optimization: {
     minimize: true,

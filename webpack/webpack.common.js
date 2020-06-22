@@ -1,3 +1,4 @@
+const webpack = require("webpack");
 const HTMLWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const ProgressBarPlugin = require("progress-bar-webpack-plugin");
@@ -45,6 +46,8 @@ module.exports = {
         },
       },
     ]),
+    // https://github.com/jmblog/how-to-optimize-momentjs-with-webpack
+    new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
     // 打包进度
     new ProgressBarPlugin({
       complete: "█",
